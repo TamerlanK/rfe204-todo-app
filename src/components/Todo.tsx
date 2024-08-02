@@ -1,24 +1,33 @@
-import { useState } from "react"
-import { TodoType } from "../types"
 import { FaTrashAlt } from "react-icons/fa"
+import { TodoType } from "../types"
 
 interface TodoProps {
   todo: TodoType
-  onDelete: (id: number) => void
+  onDelete: (id: TodoType["id"]) => void
+  onToggle: (id: TodoType["id"]) => void
 }
 
-const Todo = ({ todo, onDelete }: TodoProps) => {
-  const [isCompleted, setIsCompleted] = useState(todo.completed)
+const Todo = ({ todo, onDelete, onToggle }: TodoProps) => {
   return (
     <div className="w-full flex justify-between items-center py-2">
-      <div className={`text-xl text-neutral-600 ${isCompleted && "line-through text-emerald-600"}`}>{todo.text}</div>
-      <div className="flex gap-x-3 justify-between items-center">
+      <label className="flex items-center gap-x-3">
         <input
           type="checkbox"
-          checked={isCompleted}
-          onChange={(e) => setIsCompleted(e.target.checked)}
+          checked={todo.completed}
+          onChange={() => onToggle(todo.id)}
           className="size-4"
         />
+        <span
+          className={`text-xl ${
+            todo.completed
+              ? "text-emerald-600 line-through"
+              : "text-neutral-600"
+          }`}
+        >
+          {todo.text}
+        </span>
+      </label>
+      <div className="flex gap-x-3 justify-between items-center">
         <button onClick={() => onDelete(todo.id)}>
           <FaTrashAlt className="size-4 text-rose-700" />
         </button>
